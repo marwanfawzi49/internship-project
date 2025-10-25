@@ -6,8 +6,18 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
 
+    #def click(self, by, locator):
+        #self.wait.until(EC.element_to_be_clickable((by, locator))).click()
     def click(self, by, locator):
-        self.wait.until(EC.element_to_be_clickable((by, locator))).click()
+        """Wait for element and click, with JS fallback (for headless stability)."""
+        try:
+            element = self.wait.until(EC.element_to_be_clickable((by, locator)))
+            element.click()
+        except Exception:
+            # fallback for headless or overlay issues
+            element = self.driver.find_element(by, locator)
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+            self.driver.execute_script("arguments[0].click();", element)
 
     def type_text(self, by, locator, text):
         element = self.wait.until(EC.visibility_of_element_located((by, locator)))

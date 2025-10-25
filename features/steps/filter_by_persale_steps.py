@@ -5,7 +5,7 @@ import os
 
 @given('the user is on the main page "https://soft.reelly.io"')
 def step_open_main_page(context):
-    context.driver = webdriver.Chrome()
+    #context.driver = webdriver.Chrome()
     context.driver.get("https://soft.reelly.io")
     context.driver.maximize_window()
 
@@ -23,8 +23,8 @@ def step_login(context):
       environment variables (USER_EMAIL and USER_PASSWORD) for security reasons.
     """
 
-    email = os.getenv("USER_EMAIL", "YOUR_USERNAME")
-    password = os.getenv("USER_PASSWORD", "YOUR_PASSWORD")
+    email = os.getenv("USER_EMAIL", "marwan_ismael@ymail.com")
+    password = os.getenv("USER_PASSWORD", "MARWANfawzi1987")
 
     context.app.login_page.login(email, password)
 

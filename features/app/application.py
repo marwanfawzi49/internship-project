@@ -1,6 +1,6 @@
-# features/app/application.py
-from ..pages.login_page import LoginPage
-from ..pages.off_plan_page import OffPlanPage
+
+from pages.login_page import LoginPage
+from pages.off_plan_page import OffPlanPage
 
 class Application:
     def __init__(self, driver):
