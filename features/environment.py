@@ -8,7 +8,7 @@ from app.application import Application
 import os
 
 
-# 🔧 FIXED: single, clean version of browser_init (no nested def)
+
 def browser_init(context):
     username = os.getenv("BROWSERSTACK_USERNAME")
     access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
