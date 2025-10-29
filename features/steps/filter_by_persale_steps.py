@@ -23,8 +23,8 @@ def step_login(context):
       environment variables (USER_EMAIL and USER_PASSWORD) for security reasons.
     """
 
-    email = os.getenv("USER_EMAIL", "USER_EMAIL")
-    password = os.getenv("USER_PASSWORD", "USER_PASSWORD")
+    email = os.getenv("USER_EMAIL", "marwan_ismael@ymail.com")
+    password = os.getenv("USER_PASSWORD", "MARWANfawzi1987")
 
     context.app.login_page.login(email, password)
 
