@@ -10,6 +10,8 @@ import os
 
 
 def browser_init(context):
+   #___________________________________________________________________
+    # Browser Stack 
     username = os.getenv("BROWSERSTACK_USERNAME")
     access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
 
@@ -17,7 +19,7 @@ def browser_init(context):
     options.browser_version = "latest"
     options.platform_name = "OS X Sonoma"
 
-    # Nice-to-have: name the run/build in the BS dashboard
+    
     bstack_options = {
         "os": "OS X",
         "osVersion": "Sonoma",
