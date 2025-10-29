@@ -75,7 +75,7 @@ def browser_init(context):
 
 
 # ------------------------------------------------------------------------
-# 🔧 FIXED: Behave hooks — correct function signatures
+
 # ------------------------------------------------------------------------
 def before_scenario(context, scenario):
     print('\nStarted scenario:', scenario.name)
