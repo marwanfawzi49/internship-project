@@ -79,7 +79,7 @@ def browser_init(context):
 # ------------------------------------------------------------------------
 def before_scenario(context, scenario):
     print('\nStarted scenario:', scenario.name)
-    browser_init(context)  # Launch BrowserStack or local browser
+    browser_init(context)  
 
 
 def before_step(context, step):
