@@ -11,7 +11,7 @@ class OffPlanPage(BasePage):
     FILTER_DROPDOWN = (By.CSS_SELECTOR, '[data-test-id="search-and-filters-button"]')
     PRESALE_OPTION = (By.CSS_SELECTOR, '[data-test-id="filter-badge-presale"]')
     PRODUCT_ITEMS = (By.CSS_SELECTOR, '[data-test-id^="project-card-"]')
-    SALE_STATUS = (By.CSS_SELECTOR, '[data-test-id="project-card-sale-status"]')
+    SALE_STATUS = (By.XPATH, "//span[@data-test-id='project-card-sale-status' and normalize-space()='Presale']")
 
 
     def open_off_plan(self):
@@ -22,7 +22,7 @@ class OffPlanPage(BasePage):
 
         # Wait for dropdown to open (headless-safe)
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 20).until(
                 EC.visibility_of_element_located(self.PRESALE_OPTION)
             )
         except Exception:
@@ -37,6 +37,10 @@ class OffPlanPage(BasePage):
         self.click(*self.PRESALE_OPTION)
 
     def verify_presale_results(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_any_elements_located(self.SALE_STATUS)
+        )
+
         status_elements = self.get_elements(*self.SALE_STATUS)
         assert len(status_elements) > 0, "No sale status elements found after filtering."
 

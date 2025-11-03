@@ -8,35 +8,42 @@ from app.application import Application
 import os
 
 
-# 🔧 FIXED: single, clean version of browser_init (no nested def)
+
 def browser_init(context):
-    username = os.getenv("BROWSERSTACK_USERNAME")
-    access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
+    #__________________________________________________________
 
-    options = webdriver.ChromeOptions()
-    options.browser_version = "latest"
-    options.platform_name = "OS X Sonoma"
+    #Usinf Browser Stack
+    #username = os.getenv("BROWSERSTACK_USERNAME")
+    #access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
 
-    # Nice-to-have: name the run/build in the BS dashboard
-    bstack_options = {
-        "os": "OS X",
-        "osVersion": "Sonoma",
-        "projectName": "Soft.reelly Presale Filter",
-        "buildName": "BrowserStack Internship Build",
-        "sessionName": "Presale filter scenario",
-        "local": "false"
-    }
-    options.set_capability("bstack:options", bstack_options)
+    #options = webdriver.ChromeOptions()
+    #options.browser_version = "latest"
+    #options.platform_name = "OS X Sonoma"
 
-    context.driver = webdriver.Remote(
-        command_executor=f"https://{username}:{access_key}@hub-cloud.browserstack.com/wd/hub",
-        options=options
-    )
+
+    #bstack_options = {
+       # "os": "OS X",
+       # "osVersion": "Sonoma",
+       # "projectName": "Soft.reelly Presale Filter",
+       # "buildName": "BrowserStack Internship Build",
+       # "sessionName": "Presale filter scenario",
+       # "local": "false"
+    #}
+    #options.set_capability("bstack:options", bstack_options)
+
+    #context.driver = webdriver.Remote(
+       # command_executor=f"https://{username}:{access_key}@hub-cloud.browserstack.com/wd/hub",
+       # options=options
+    #)
 # ------------------------------------------------------------------------
 # 🟡 LOCAL CHROME (for reference, disabled)
-# Uncomment to run locally with Chrome instead of BrowserStack
-#
 
+    service = Service(ChromeDriverManager().install())
+    context.driver = webdriver.Chrome(service=service)
+    context.driver.maximize_window()
+    context.driver.implicitly_wait(4)
+
+    context.app = Application(context.driver)
 # ------------------------------------------------------------------------
 
 
@@ -73,11 +80,11 @@ def browser_init(context):
 
 
 # ------------------------------------------------------------------------
-# 🔧 FIXED: Behave hooks — correct function signatures
+
 # ------------------------------------------------------------------------
 def before_scenario(context, scenario):
     print('\nStarted scenario:', scenario.name)
-    browser_init(context)  # Launch BrowserStack or local browser
+    browser_init(context)
 
 
 def before_step(context, step):
