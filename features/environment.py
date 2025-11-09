@@ -1,59 +1,32 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.firefox import GeckoDriverManager
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service as FirefoxService  
+from webdriver_manager.firefox import GeckoDriverManager                  
+from selenium.webdriver.chrome.service import Service                     
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from app.application import Application
 import os
-
+from selenium.webdriver.chrome.service import Service as ChromeService
 
 
 def browser_init(context):
-    # =========================
-    # 🟢 NEW: BrowserStack (real mobile)
-    # =========================
-    if os.getenv("REMOTE", "0") == "1":
-        username = os.getenv("BROWSERSTACK_USERNAME")
-        access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
-        if not username or not access_key:
-            raise RuntimeError("Set BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY for REMOTE=1 runs.")
+   # Always run Chrome in MOBILE EMULATION mode
+    device_name = os.getenv("MOBILE_DEVICE", "Pixel 7")  # Default phone
+    print(f"\n📱 Running in MOBILE EMULATION mode ({device_name})")
 
-        # Choose device via env or use sensible defaults
-        is_ios = os.getenv("IOS", "0") == "1"
-        device_name = os.getenv("BS_DEVICE", "iPhone 15" if is_ios else "Samsung Galaxy S23")
-        os_version = os.getenv("BS_OS_VERSION", "17" if is_ios else "13.0")
+    chrome_options = Options()
+    mobile_emulation = {"deviceName": device_name}
+    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
-        if is_ios:
-            desired_cap = {
-                "bstack:options": {
-                    "deviceName": device_name,
-                    "osVersion": os_version,
-                    "projectName": "Soft.reelly",
-                    "buildName": "Mobile Web",
-                    "sessionName": "Sign-up flow (iOS Safari)",
-                },
-                "browserName": "Safari",
-            }
-        else:
-            desired_cap = {
-                "bstack:options": {
-                    "deviceName": device_name,
-                    "osVersion": os_version,
-                    "projectName": "Soft.reelly",
-                    "buildName": "Mobile Web",
-                    "sessionName": "Sign-up flow (Android Chrome)",
-                },
-                "browserName": "Chrome",
-            }
+    # Optional: run headless if you prefer
+    # chrome_options.add_argument("--headless=new")
 
-        context.driver = webdriver.Remote(
-            command_executor=f"https://{username}:{access_key}@hub-cloud.browserstack.com/wd/hub",
-            desired_capabilities=desired_cap
-        )
-        context.driver.implicitly_wait(4)
-        context.app = Application(context.driver)
-        return
+    service = ChromeService(ChromeDriverManager().install())
+    context.driver = webdriver.Chrome(service=service, options=chrome_options)
+    context.driver.implicitly_wait(4)
+
+    # Initialize your Page Object structure
+    context.app = Application(context.driver)
 
     #__________________________________________________________
 
