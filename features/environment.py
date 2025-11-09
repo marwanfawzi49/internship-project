@@ -10,6 +10,51 @@ import os
 
 
 def browser_init(context):
+    # =========================
+    # 🟢 NEW: BrowserStack (real mobile)
+    # =========================
+    if os.getenv("REMOTE", "0") == "1":
+        username = os.getenv("BROWSERSTACK_USERNAME")
+        access_key = os.getenv("BROWSERSTACK_ACCESS_KEY")
+        if not username or not access_key:
+            raise RuntimeError("Set BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY for REMOTE=1 runs.")
+
+        # Choose device via env or use sensible defaults
+        is_ios = os.getenv("IOS", "0") == "1"
+        device_name = os.getenv("BS_DEVICE", "iPhone 15" if is_ios else "Samsung Galaxy S23")
+        os_version = os.getenv("BS_OS_VERSION", "17" if is_ios else "13.0")
+
+        if is_ios:
+            desired_cap = {
+                "bstack:options": {
+                    "deviceName": device_name,
+                    "osVersion": os_version,
+                    "projectName": "Soft.reelly",
+                    "buildName": "Mobile Web",
+                    "sessionName": "Sign-up flow (iOS Safari)",
+                },
+                "browserName": "Safari",
+            }
+        else:
+            desired_cap = {
+                "bstack:options": {
+                    "deviceName": device_name,
+                    "osVersion": os_version,
+                    "projectName": "Soft.reelly",
+                    "buildName": "Mobile Web",
+                    "sessionName": "Sign-up flow (Android Chrome)",
+                },
+                "browserName": "Chrome",
+            }
+
+        context.driver = webdriver.Remote(
+            command_executor=f"https://{username}:{access_key}@hub-cloud.browserstack.com/wd/hub",
+            desired_capabilities=desired_cap
+        )
+        context.driver.implicitly_wait(4)
+        context.app = Application(context.driver)
+        return
+
     #__________________________________________________________
 
     #Usinf Browser Stack
@@ -38,12 +83,12 @@ def browser_init(context):
 # ------------------------------------------------------------------------
 # 🟡 LOCAL CHROME (for reference, disabled)
 
-    service = Service(ChromeDriverManager().install())
-    context.driver = webdriver.Chrome(service=service)
-    context.driver.maximize_window()
-    context.driver.implicitly_wait(4)
+    #service = Service(ChromeDriverManager().install())
+    #context.driver = webdriver.Chrome(service=service)
+    #context.driver.maximize_window()
+    #context.driver.implicitly_wait(4)
 
-    context.app = Application(context.driver)
+    #context.app = Application(context.driver)
 # ------------------------------------------------------------------------
 
 
