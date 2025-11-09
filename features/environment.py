@@ -18,14 +18,13 @@ def browser_init(context):
     mobile_emulation = {"deviceName": device_name}
     chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
-    # Optional: run headless if you prefer
-    # chrome_options.add_argument("--headless=new")
+   
 
     service = ChromeService(ChromeDriverManager().install())
     context.driver = webdriver.Chrome(service=service, options=chrome_options)
     context.driver.implicitly_wait(4)
 
-    # Initialize your Page Object structure
+   
     context.app = Application(context.driver)
 
     #__________________________________________________________
